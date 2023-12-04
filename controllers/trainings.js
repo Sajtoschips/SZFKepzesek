@@ -58,6 +58,14 @@ exports.updateTraining = async (req, res, next) => {
 // @desc   Delete training
 // @route  DELETE /api/trainings/:id
 // @access Private
-exports.deleteTraining = (req, res, next) => {
-    res.status(200).json({ success: true, msg: `Delete training ${req.params.id}` });
+exports.deleteTraining = async (req, res, next) => {
+    try {
+        const training = await Training.findByIdAndDelete(req.params.id);
+        if (!training) {
+            return res.status(400).json({ success: false, msg: "Not found" });
+        }
+        res.status(200).json({ success: true, data: {} });
+    } catch (error) {
+        res.status(400).json({ success: false });
+    }
 };
